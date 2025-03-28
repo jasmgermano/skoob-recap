@@ -24,7 +24,8 @@ export default function Home() {
   const hasAnyBookStats = Object.values(bookStats).some(stat => stat !== null);
 
   const extractIdFromUrl = (url: string) => {
-    const match = url.match(/\/usuario\/(\d+)(?:-[^\/]*)?$/);
+    const regex = /\/usuario\/(\d+)(?:-[^\/]*)?$/;
+    const match = regex.exec(url);
     const id = match ? match[1] : null;
     return id;
   };
