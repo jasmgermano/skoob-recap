@@ -14,7 +14,6 @@ type BookStats = {
 
 export default function Home() {
   const [search, setSearch] = useState("");
-  const [books, setBooks] = useState<Book[]>([]);
   const [bookStats, setBookStats] = useState<BookStats>({
     biggest: null,
     smallest: null,
