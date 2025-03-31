@@ -1,7 +1,7 @@
 'use client';
 
 import { getUserBooks } from "@/services/skoob";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import BookStats from "@/components/bookStats";
 import { Book } from "@/types/book";
 
