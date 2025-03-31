@@ -4,6 +4,7 @@ import { getUserBooks } from "@/services/skoob";
 import { useEffect, useState } from "react";
 import BookStats from "@/components/bookStats";
 import { Book } from "@/types/book";
+import { validateSearch } from "@/validations/validators";
 
 type BookStats = {
   biggest: Book | null;
@@ -21,6 +22,9 @@ export default function Home() {
     lowestRating: null,
   });
   const [month, setMonth] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const hasAnyBookStats = Object.values(bookStats).some(stat => stat !== null);
 
@@ -34,10 +38,28 @@ export default function Home() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    const id = extractIdFromUrl(search);
-    console.log(id);
+    setError(false);
+    setErrorMessage("");
+
+    const { id, validationMessage } = validateSearch(search);
+    if (validationMessage) {
+      setError(true);
+      setErrorMessage(validationMessage);
+      return;
+    }
+
+    if (bookStats) {
+      setBookStats({
+        biggest: null,
+        smallest: null,
+        highestRating: null,
+        lowestRating: null,
+      });
+    }
+
     if (!id) return;
 
+    setLoading(true);
     try {
       const data = await getUserBooks(id);
       const readBooksInThisMonth = data.response.filter((book: { tipo: number, dt_leitura: string }) => {
@@ -89,13 +111,25 @@ export default function Home() {
 
     } catch (error) {
       console.error(error);
+      setError(true);
+    } finally {
+      setLoading(false);
     }
-  };
+  }
 
   useEffect(() => {
-    const monthName = new Date().toLocaleString('pt-br', { month: 'long' });
+    const monthName = new Date().toLocaleString("pt-br", { month: "long" });
     setMonth(monthName);
   }, []);
+
+  useEffect(() => {
+    if (error) {
+      setTimeout(() => {
+        setError(false);
+        setErrorMessage("");
+      }, 3000);
+    }
+  }, [error]);
 
   return (
     <div className="flex items-stretch justify-center min-h-screen py-2 font-[family-name:var(--font-poppins)] sm:p-10">
@@ -122,6 +156,7 @@ export default function Home() {
               </button>
             </div>
           </form>
+          <span className="text-xs text-red-500">{error && errorMessage}</span>
         </div>
         {hasAnyBookStats && (
           <div className="bg-white sm:w-3/4 rounded-2xl flex flex-col gap-4 p-4 mt-5 xl:w-[700px]">
