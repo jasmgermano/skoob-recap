@@ -99,6 +99,7 @@ export default function Home() {
     } catch (error) {
       console.error(error);
       setError(true);
+      setErrorMessage(error instanceof Error ? error.message : "Erro ao buscar livros do usuário");
     } finally {
       setLoading(false);
     }
