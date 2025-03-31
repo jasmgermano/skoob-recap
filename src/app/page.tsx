@@ -20,6 +20,7 @@ export default function Home() {
     highestRating: null,
     lowestRating: null,
   });
+  const [month, setMonth] = useState("");
 
   const hasAnyBookStats = Object.values(bookStats).some(stat => stat !== null);
 
@@ -91,13 +92,18 @@ export default function Home() {
     }
   };
 
+  useEffect(() => {
+    const monthName = new Date().toLocaleString('pt-br', { month: 'long' });
+    setMonth(monthName);
+  }, []);
+
   return (
     <div className="flex items-stretch justify-center min-h-screen py-2 font-[family-name:var(--font-poppins)] sm:p-10">
       <div className="w-full sm:min-w-7/10 min-h-[300px] bg-white rounded-4xl flex justify-center items-center flex-col gap-3 p-2 sm:p-5 py-14 sm:bg-[#EEE2EE] md:shadow-md md:rounded-2xl md:p-10">
         <div className="flex flex-col items-center gap-3 w-full bg-[#EEE2EE] rounded-4xl p-4 sm:bg-none">
           <span className="text-small">⋆ BeMine Presents ⋆</span>
           <h1 className="text-2xl">lidos no mês de</h1>
-          <h2 className="text-4xl font-medium -mt-5 mb-5">{new Date().toLocaleString('pt-br', { month: 'long' })}</h2>
+          <h2 className="text-4xl font-medium -mt-5 mb-5">{month}</h2>
           <form onSubmit={handleSubmit} className="flex items-center w-full xl:w-[40%] sm:w-3/4">
             <div className="flex items-center justify-between w-full bg-white rounded-full">
               <div className="h-7 w-10 bg-[#DCC2DC] rounded-full flex items-center justify-center text-sm">
