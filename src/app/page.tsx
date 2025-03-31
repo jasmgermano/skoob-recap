@@ -71,13 +71,18 @@ export default function Home() {
         if (!book.dt_leitura) return false;
 
         const [day, month, year] = book.dt_leitura.split("/");
-        const bookDate = new Date(`${year}-${month}-${day}`);     
-
+        const bookDate = new Date(Date.UTC(
+          parseInt(year),
+          parseInt(month) - 1,
+          parseInt(day)
+        ));        
+        
         return (
           book.tipo === 1 &&
-          bookDate.getMonth() === new Date().getMonth() &&
-          bookDate.getFullYear() === new Date().getFullYear()
+          bookDate.getUTCMonth() === new Date().getUTCMonth() &&
+          bookDate.getUTCFullYear() === new Date().getUTCFullYear()
         );
+        
       });
 
       const biggestBook = readBooksInThisMonth.reduce((acc: Book | null, book: Book) => {
