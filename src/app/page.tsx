@@ -55,11 +55,23 @@ export default function Home() {
     setLoading(true);
     try {
       const data = await getUserBooks(id);
+      if (!data.response) {
+        setError(true);
+        setErrorMessage("Erro ao buscar livros do usuário");
+        return;
+      }
+
+      if (data.response.length === 0) {
+        setError(true);
+        setErrorMessage("Nenhum livro encontrado");
+        return;
+      }
+
       const readBooksInThisMonth = data.response.filter((book: { tipo: number, dt_leitura: string }) => {
         if (!book.dt_leitura) return false;
 
         const [day, month, year] = book.dt_leitura.split("/");
-        const bookDate = new Date(`${year}-${month}-${day}`);
+        const bookDate = new Date(`${year}-${month}-${day}`);     
 
         return (
           book.tipo === 1 &&
