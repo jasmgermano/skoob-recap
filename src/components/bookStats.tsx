@@ -1,4 +1,5 @@
 import { Book } from "@/types/book";
+import { BookCover } from "./bookCover";
 
 type BookStatProps = {
     book: Book;
@@ -8,13 +9,8 @@ type BookStatProps = {
 
 const BookStatCard = ({ book, label, extraInfo }: BookStatProps) => {
     return (
-        <div className={`flex w-1/2 h-full gap-2 text-[12px]`}>
-            <img
-                src={book.edicao.capa_pequena}
-                alt={book.edicao.nome_portugues}
-                width={57.5}
-                height={115}
-            />
+        <div className={`flex sm:w-1/2 h-full gap-2 text-[12px]`}>
+            <BookCover book={book} coverWidth={57.5} coverHeight={115} />
             <div>
                 {label && <p className="font-bold">{label}</p>}
                 <p>{book.edicao.nome_portugues}</p>
