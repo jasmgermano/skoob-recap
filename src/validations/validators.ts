@@ -7,7 +7,7 @@ export function validateSearch(query: string): { id: string | null; validationMe
       return { id: null, validationMessage: "O link não está no formato correto ⋆.˚✮" };
     }
   
-    const regex = /\/usuario\/(\d+)(?:-[^/]*)?$/;
+    const regex = /(?:\/usuario\/|\/share\/user\/)(\d+)(?:-[^/]*)?$/;
     const match = regex.exec(query);
   
     if (!match?.[1]) {
