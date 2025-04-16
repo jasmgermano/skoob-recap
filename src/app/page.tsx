@@ -1,7 +1,7 @@
 'use client';
 
 import { getUserBooks } from "@/services/skoob";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import BookStats from "@/components/bookStats";
 import { Book } from "@/types/book";
 import { validateSearch } from "@/validations/validators";
@@ -33,6 +33,7 @@ export default function Home() {
   const [inputPosition, setInputPosition] = useState<"center" | "top">("center");
   const [type, setType] = useState<"recap" | "general" | "">("recap");
   const [readBooksInThisMonth, setReadBooksInThisMonth] = useState<Book[]>([]);
+  
   const elementRef = useRef<HTMLDivElement>(null);
   const exportRef = useRef<HTMLDivElement>(null);
 
@@ -94,7 +95,6 @@ export default function Home() {
       });
 
       setReadBooksInThisMonth(readBooksInThisMonth);
-      console.log("Livros lidos no mês atual:", readBooksInThisMonth);
       if (readBooksInThisMonth.length === 0) {
         setError(true);
         setErrorMessage("Nenhum livro lido neste mês");
@@ -203,10 +203,10 @@ export default function Home() {
   }, [bookStats]);
 
   return (
-    <div className="flex items-stretch justify-center min-h-screen py-2 font-[family-name:var(--font-poppins)] sm:p-10 px-4">
+    <div className="flex items-stretch justify-center min-h-screen py-2 font-[family-name:var(--font-poppins)] sm:p-10 px-4">    
       <div className="w-full max-w-6xl min-h-[300px] bg-white rounded-4xl flex justify-center items-center flex-col gap-3 p-4 sm:p-5 py-14 sm:bg-primary md:shadow-md md:rounded-2xl md:p-10">
         <div className="flex flex-col items-center gap-3 w-full bg-primary rounded-4xl p-4 sm:bg-none transition-all duration-500 ease-in-out"
-          style={{ marginTop: inputPosition === 'top' ? '2rem' : '6rem' }}
+          style={{ marginTop: inputPosition === 'top' ? '2rem' : '0rem' }}
         >
           <span className="text-small">⋆ BeMine Presents ⋆</span>
           <h1 className="text-2xl">lidos no mês de</h1>
@@ -214,17 +214,17 @@ export default function Home() {
           <form onSubmit={handleSubmit} className="flex items-center w-full max-w-xl">
             <div className="flex flex-col sm:flex-row items-center justify-between w-full gap-3 sm:gap-0 sm:bg-white rounded-full">
               <div className="flex items-center justify-center w-full bg-white rounded-full">
-                <div className="h-7 w-10 bg-secondary rounded-full flex items-center justify-center text-sm">
+                <div className="h-10 w-14 bg-secondary rounded-full flex items-center justify-center text-sm">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4" viewBox="0 0 24 24"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z" /><path fill="#000" d="M10.232 10.231a5 5 0 0 1 6.89-.172l.181.172l2.828 2.829a5 5 0 0 1-6.89 7.243l-.18-.172l-2.122-2.122a1 1 0 0 1 1.32-1.497l.094.083l2.122 2.122a3 3 0 0 0 4.377-4.1l-.135-.143l-2.828-2.828a3 3 0 0 0-4.243 0a1 1 0 0 1-1.414-1.415M3.868 3.867a5 5 0 0 1 6.89-.172l.181.172L13.06 5.99a1 1 0 0 1-1.32 1.497l-.094-.083l-2.121-2.121A3 3 0 0 0 5.147 9.38l.135.144l2.829 2.829a3 3 0 0 0 4.242 0a1 1 0 1 1 1.415 1.414a5 5 0 0 1-6.89.172l-.182-.172l-2.828-2.829a5 5 0 0 1 0-7.07Z" /></g></svg>
                 </div>
                 <input
                   type="text"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="bg-white rounded-full h-7 w-full p-2 text-xs sm:text-sm appearance-none border-none focus:outline-none"
+                  className="bg-white rounded-full h-10 w-full p-2 text-xs sm:text-sm appearance-none border-none focus:outline-none"
                 />
               </div>
-              <button type="submit" className="h-7 w-full sm:w-14 bg-secondary rounded-full flex items-center justify-center cursor-pointer">
+              <button type="submit" className="h-10 w-full sm:w-20 bg-secondary rounded-full flex items-center justify-center cursor-pointer">
                 {loading ? (
                   <svg aria-hidden="true" className="inline w-3 h-3 text-[#b37ab3] animate-spin fill-primary" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
@@ -268,44 +268,44 @@ export default function Home() {
             {type === "recap" && (
               <>
                 <BooksContainer showBookStats={showBookStats} ref={elementRef}>
-                <div className="flex flex-col sm:flex-row justify-center items-stretch gap-4">
-                  {bookStats.biggest && (
-                    <BookStats
-                      book={bookStats.biggest}
-                      label="Maior livro"
-                      extraInfo={<p>páginas: {bookStats.biggest.edicao.paginas}</p>}
-                    />
-                  )}
-                  {bookStats.smallest && (
-                    <BookStats
-                      book={bookStats.smallest}
-                      label="Menor livro"
-                      extraInfo={<p>páginas: {bookStats.smallest.edicao.paginas}</p>}
-                    />
-                  )}
-                </div>
+                  <div className="flex flex-col sm:flex-row justify-center items-stretch gap-4">
+                    {bookStats.biggest && (
+                      <BookStats
+                        book={bookStats.biggest}
+                        label="Maior livro"
+                        extraInfo={<p>páginas: {bookStats.biggest.edicao.paginas}</p>}
+                      />
+                    )}
+                    {bookStats.smallest && (
+                      <BookStats
+                        book={bookStats.smallest}
+                        label="Menor livro"
+                        extraInfo={<p>páginas: {bookStats.smallest.edicao.paginas}</p>}
+                      />
+                    )}
+                  </div>
 
-                <div className="flex flex-col sm:flex-row justify-center items-stretch gap-4">
-                  {bookStats.highestRating && (
-                    <BookStats
-                      book={bookStats.highestRating}
-                      label="Melhor nota"
-                      extraInfo={
-                        <p>nota: {bookStats.highestRating.ranking} ⭐</p>
-                      }
-                    />
-                  )}
-                  {bookStats.lowestRating && (
-                    <BookStats
-                      book={bookStats.lowestRating}
-                      label="Pior nota"
-                      extraInfo={
-                        <p>nota: {bookStats.lowestRating.ranking} ⭐</p>
-                      }
-                    />
-                  )}
-                </div>
-              </BooksContainer>
+                  <div className="flex flex-col sm:flex-row justify-center items-stretch gap-4">
+                    {bookStats.highestRating && (
+                      <BookStats
+                        book={bookStats.highestRating}
+                        label="Melhor nota"
+                        extraInfo={
+                          <p>nota: {bookStats.highestRating.ranking} ⭐</p>
+                        }
+                      />
+                    )}
+                    {bookStats.lowestRating && (
+                      <BookStats
+                        book={bookStats.lowestRating}
+                        label="Pior nota"
+                        extraInfo={
+                          <p>nota: {bookStats.lowestRating.ranking} ⭐</p>
+                        }
+                      />
+                    )}
+                  </div>
+                </BooksContainer>
                 <div style={{ position: "absolute", left: "-9999px" }} ref={exportRef}>
                   <TwitterRecap books={readBooksInThisMonth} stats={bookStats} type={type} />
                 </div>
@@ -314,19 +314,19 @@ export default function Home() {
             {type === "general" && (
               <>
                 <BooksContainer showBookStats={showBookStats} ref={elementRef}> 
-                <div className="w-full flex flex-wrap justify-center items-stretch gap-3">
-                  {readBooksInThisMonth.map((book) => (
-                    <div key={book.edicao.id} className="">
-                      <div className="h-40">
-                        <BookCover book={book} />
+                  <div className="w-full flex flex-wrap justify-center items-stretch gap-3">
+                    {readBooksInThisMonth.map((book) => (
+                      <div key={book.edicao.id} className="">
+                        <div className="h-40">
+                          <BookCover book={book} />
+                        </div>
+                        <div className={`bg-[#F5F5F5] rounded-full mb-1 mt-2 ${book.ranking ? "w-10" : "w-16"}`}>
+                          <p className="text-[10px] text-center p-1">{book.ranking ? `${book.ranking} ⭐` : "Sem nota"}</p>
+                        </div>
                       </div>
-                      <div className={`bg-[#F5F5F5] rounded-full mb-1 mt-2 ${book.ranking ? "w-10" : "w-16"}`}>
-                        <p className="text-[10px] text-center p-1">{book.ranking ? `${book.ranking} ⭐` : "Sem nota"}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </BooksContainer>
+                    ))}
+                  </div>
+                </BooksContainer>
                 <div style={{ position: "absolute", left: "-9999px" }} ref={exportRef}>
                   <TwitterRecap books={readBooksInThisMonth} stats={bookStats} type={type} />
                 </div>
