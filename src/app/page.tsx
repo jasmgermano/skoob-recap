@@ -31,6 +31,7 @@ export default function Home() {
   const [inputPosition, setInputPosition] = useState<"center" | "top">("center");
   const [type, setType] = useState<"recap" | "general" | "">("recap");
   const [readBooksInThisMonth, setReadBooksInThisMonth] = useState<Book[]>([]);
+  const exportRef = useRef<HTMLDivElement>(null);
 
   const hasAnyBookStats = Object.values(bookStats).some(stat => stat !== null);
 
@@ -135,6 +136,38 @@ export default function Home() {
     }
   }
 
+  const htmlToImageConvert = () => {
+    const node = exportRef.current;
+
+    if (!node) return;
+  
+    const images = node.querySelectorAll("img");
+  
+    const imageLoadPromises = Array.from(images).map((img) => {
+      if (img.complete && img.naturalHeight !== 0) return Promise.resolve();
+      return new Promise((resolve) => {
+        img.onload = () => resolve(null);
+        img.onerror = () => resolve(null);
+      });
+    });
+  
+    Promise.all(imageLoadPromises).then(() => {
+      html2canvas(node, {
+        useCORS: true,
+        scale: 2,
+        width: 1200,
+        height: 675,
+      }).then((canvas) => {
+        const dataUrl = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.download = "twitter-recap.png";
+        link.href = dataUrl;
+        link.click();
+      });
+    });
+  };
+  
+
   useEffect(() => {
     const monthName = new Date().toLocaleString("pt-br", { month: "long" });
     setMonth(monthName);
@@ -230,7 +263,7 @@ export default function Home() {
               </button>
             </div>
             {type === "recap" && (
-              <BooksContainer showBookStats={showBookStats}>
+              <>
                 <div className="flex flex-col sm:flex-row justify-center items-stretch gap-4">
                   {bookStats.biggest && (
                     <BookStats
@@ -269,9 +302,13 @@ export default function Home() {
                   )}
                 </div>
               </BooksContainer>
+                <div style={{ position: "absolute", left: "-9999px" }} ref={exportRef}>
+                  <TwitterRecap books={readBooksInThisMonth} stats={bookStats} type={type} />
+                </div>
+              </>
             )}
             {type === "general" && (
-              <BooksContainer showBookStats={showBookStats}>
+              <>
                 <div className="w-full flex flex-wrap justify-center items-stretch gap-3">
                   {readBooksInThisMonth.map((book) => (
                     <div key={book.edicao.id} className="">
@@ -285,6 +322,10 @@ export default function Home() {
                   ))}
                 </div>
               </BooksContainer>
+                <div style={{ position: "absolute", left: "-9999px" }} ref={exportRef}>
+                  <TwitterRecap books={readBooksInThisMonth} stats={bookStats} type={type} />
+                </div>
+              </>
             )}
           </>
         )}
