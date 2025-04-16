@@ -7,6 +7,8 @@ import { Book } from "@/types/book";
 import { validateSearch } from "@/validations/validators";
 import { BooksContainer } from "@/components/booksContainer";
 import { BookCover } from "@/components/bookCover";
+import html2canvas from 'html2canvas';
+import { TwitterRecap } from "@/components/twitterRecap";
 
 type BookStats = {
   biggest: Book | null;
@@ -31,6 +33,7 @@ export default function Home() {
   const [inputPosition, setInputPosition] = useState<"center" | "top">("center");
   const [type, setType] = useState<"recap" | "general" | "">("recap");
   const [readBooksInThisMonth, setReadBooksInThisMonth] = useState<Book[]>([]);
+  const elementRef = useRef<HTMLDivElement>(null);
   const exportRef = useRef<HTMLDivElement>(null);
 
   const hasAnyBookStats = Object.values(bookStats).some(stat => stat !== null);
@@ -240,7 +243,7 @@ export default function Home() {
             {errorMessage}
           </span>
         </div>
-        {hasAnyBookStats && (
+        {hasAnyBookStats && showBookStats && (
           <>
             <div>
               <button
@@ -264,6 +267,7 @@ export default function Home() {
             </div>
             {type === "recap" && (
               <>
+                <BooksContainer showBookStats={showBookStats} ref={elementRef}>
                 <div className="flex flex-col sm:flex-row justify-center items-stretch gap-4">
                   {bookStats.biggest && (
                     <BookStats
@@ -309,6 +313,7 @@ export default function Home() {
             )}
             {type === "general" && (
               <>
+                <BooksContainer showBookStats={showBookStats} ref={elementRef}> 
                 <div className="w-full flex flex-wrap justify-center items-stretch gap-3">
                   {readBooksInThisMonth.map((book) => (
                     <div key={book.edicao.id} className="">
@@ -327,6 +332,10 @@ export default function Home() {
                 </div>
               </>
             )}
+            <button className="mt-5 bg-secondary py-1 px-3 cursor-pointer rounded-full flex items-center gap-2" onClick={htmlToImageConvert}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"><path fill="none" stroke="#000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12a3 3 0 1 0 6 0a3 3 0 1 0-6 0m12-6a3 3 0 1 0 6 0a3 3 0 1 0-6 0m0 12a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-6.3-7.3l6.6-3.4m-6.6 6l6.6 3.4"/></svg>
+              <span className="text-xs">Compartilhar</span>
+            </button>
           </>
         )}
       </div>
