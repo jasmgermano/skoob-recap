@@ -9,6 +9,8 @@ import { BooksContainer } from "@/components/booksContainer";
 import { BookCover } from "@/components/bookCover";
 import html2canvas from 'html2canvas';
 import { TwitterRecap } from "@/components/twitterRecap";
+import Logo from "../../public/images/logo.png";
+import Image from "next/image";
 
 type BookStats = {
   biggest: Book | null;
@@ -208,7 +210,8 @@ export default function Home() {
         <div className="flex flex-col items-center gap-3 w-full bg-primary rounded-4xl p-4 sm:bg-none transition-all duration-500 ease-in-out"
           style={{ marginTop: inputPosition === 'top' ? '2rem' : '0rem' }}
         >
-          <span className="text-small">⋆ BeMine Presents ⋆</span>
+          <span className="text-[12px] sm:text-small -mb-2">⋆ BeMine Presents ⋆</span>
+          <Image src={Logo} alt="Logo" className="w-20 sm:w-28" />
           <h1 className="text-2xl">lidos no mês de</h1>
           <h2 className="text-4xl text-center font-medium -mt-5 mb-5 flex items-center gap-1"><span className="text-xl">‧₊˚🖇️✩</span>{month}</h2>
           <form onSubmit={handleSubmit} className="flex items-center w-full max-w-xl">
