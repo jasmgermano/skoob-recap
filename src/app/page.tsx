@@ -332,10 +332,28 @@ export default function Home() {
                 </div>
               </>
             )}
-            <button className="mt-5 bg-secondary py-1 px-3 cursor-pointer rounded-full flex items-center gap-2" onClick={htmlToImageConvert}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"><path fill="none" stroke="#000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12a3 3 0 1 0 6 0a3 3 0 1 0-6 0m12-6a3 3 0 1 0 6 0a3 3 0 1 0-6 0m0 12a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-6.3-7.3l6.6-3.4m-6.6 6l6.6 3.4"/></svg>
-              <span className="text-xs">Compartilhar</span>
+            <div className="mt-5 flex gap-4">
+              <button
+                onClick={htmlToImageConvert}
+                className="bg-secondary py-1 px-4 cursor-pointer rounded-full flex items-center gap-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"><path fill="none" stroke="#000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12a3 3 0 1 0 6 0a3 3 0 1 0-6 0m12-6a3 3 0 1 0 6 0a3 3 0 1 0-6 0m0 12a3 3 0 1 0 6 0a3 3 0 1 0-6 0m-6.3-7.3l6.6-3.4m-6.6 6l6.6 3.4" /></svg>
+                <span className="text-xs">Baixar imagem</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                    `esse mês eu li ${readBooksInThisMonth.length} livros no Skoob ୭🧷✧˚.! Confira meu resumo:`
+                  )}`;
+                  window.open(url, "_blank");
+                }}
+                className="bg-[#1DA1F2] text-white py-1 px-4 cursor-pointer rounded-full flex items-center gap-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 16 16"><path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334v-.426A6.672 6.672 0 0 0 16 3.542a6.575 6.575 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.084.797A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.381A3.323 3.323 0 0 1 .64 6.575v.041a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.617-.057 3.29 3.29 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045 9.344 9.344 0 0 0 5.026 1.465" /></svg>
+                <span className="text-xs">Compartilhar no Twitter</span>
             </button>
+            </div>
           </>
         )}
       </div>
