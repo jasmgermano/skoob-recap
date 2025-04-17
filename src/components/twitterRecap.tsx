@@ -1,6 +1,5 @@
 import { Book } from "@/types/book";
 import { BookCover } from "./bookCover";
-import { text } from "node:stream/consumers";
 
 type TwitterRecapProps = {
   books: Book[];
@@ -27,7 +26,7 @@ export function TwitterRecap({ books, stats, type, backgroundColor, textColor }:
     return stars;
   }
 
-  console.log(textColor)
+
   return (
     <div
       style={{
