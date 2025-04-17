@@ -320,8 +320,14 @@ export default function Home() {
                         <div className="h-40">
                           <BookCover book={book} />
                         </div>
-                        <div className={`bg-[#F5F5F5] rounded-full mb-1 mt-2 ${book.ranking ? "w-10" : "w-16"}`}>
-                          <p className="text-[10px] text-center p-1">{book.ranking ? `${book.ranking} ⭐` : "Sem nota"}</p>
+                        <div className={`bg-[#F5F5F5] rounded-full mb-1 mt-2 ${book.ranking ? "w-10" : "min-w-16 max-w-20"}`}>
+                          <p className="text-[10px] text-center p-1">
+                            {(() => {
+                              const favoriteIcon = book.favorito == 1 ? "💜" : "";
+                              if (!book.ranking) return `Sem nota ${favoriteIcon}`;
+                              return `${book.ranking} ⭐ ${favoriteIcon}`;
+                            })()}
+                          </p>
                         </div>
                       </div>
                     ))}
