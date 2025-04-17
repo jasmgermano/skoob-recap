@@ -35,6 +35,7 @@ export default function Home() {
   const [inputPosition, setInputPosition] = useState<"center" | "top">("center");
   const [type, setType] = useState<"recap" | "general" | "">("recap");
   const [readBooksInThisMonth, setReadBooksInThisMonth] = useState<Book[]>([]);
+  const [backgroundColor, setBackgroundColor] = useState("#ffffff");
   
   const elementRef = useRef<HTMLDivElement>(null);
   const exportRef = useRef<HTMLDivElement>(null);
@@ -172,6 +173,13 @@ export default function Home() {
     });
   };
   
+  function isColorDark(hex: string): boolean {
+    const r = parseInt(hex.substr(1, 2), 16);
+    const g = parseInt(hex.substr(3, 2), 16);
+    const b = parseInt(hex.substr(5, 2), 16);
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    return brightness < 128;
+  }  
 
   useEffect(() => {
     const monthName = new Date().toLocaleString("pt-br", { month: "long" });
@@ -207,7 +215,7 @@ export default function Home() {
   return (
     <div className="flex items-stretch justify-center min-h-screen py-2 font-[family-name:var(--font-poppins)] sm:p-10 px-4">    
       <div className="w-full max-w-6xl min-h-[300px] bg-white rounded-4xl flex justify-center items-center flex-col gap-3 p-4 sm:p-5 py-14 sm:bg-primary md:shadow-md md:rounded-2xl md:p-10">
-        <div className="flex flex-col items-center gap-3 w-full bg-primary rounded-4xl p-4 sm:bg-none transition-all duration-500 ease-in-out"
+        <div className="flex flex-col items-center gap-3 w-full bg-primary rounded-4xl p-4 pt-10 sm:bg-none transition-all duration-500 ease-in-out"
           style={{ marginTop: inputPosition === 'top' ? '2rem' : '0rem' }}
         >
           <span className="text-[12px] sm:text-small -mb-2">⋆ BeMine Presents ⋆</span>
@@ -269,8 +277,8 @@ export default function Home() {
               </button>
             </div>
             {type === "recap" && (
-              <>
-                <BooksContainer showBookStats={showBookStats} ref={elementRef}>
+              <div className={`${isColorDark(backgroundColor) ? "text-white" : "text-black"}`}>
+                <BooksContainer showBookStats={showBookStats} ref={elementRef} backgroundColor={backgroundColor}>
                   <div className="flex flex-col sm:flex-row justify-center items-stretch gap-4">
                     {bookStats.biggest && (
                       <BookStats
@@ -310,21 +318,21 @@ export default function Home() {
                   </div>
                 </BooksContainer>
                 <div style={{ position: "absolute", left: "-9999px" }} ref={exportRef}>
-                  <TwitterRecap books={readBooksInThisMonth} stats={bookStats} type={type} />
+                  <TwitterRecap books={readBooksInThisMonth} stats={bookStats} type={type} backgroundColor={backgroundColor} textColor={isColorDark(backgroundColor) ? "text-white" : "text-black"} />
                 </div>
-              </>
+              </div>
             )}
             {type === "general" && (
               <>
-                <BooksContainer showBookStats={showBookStats} ref={elementRef}> 
+                <BooksContainer showBookStats={showBookStats} ref={elementRef} backgroundColor={backgroundColor} >
                   <div className="w-full flex flex-wrap justify-center items-stretch gap-3">
                     {readBooksInThisMonth.map((book) => (
                       <div key={book.edicao.id} className="">
                         <div className="h-40">
                           <BookCover book={book} />
                         </div>
-                        <div className={`bg-[#F5F5F5] rounded-full mb-1 mt-2 ${book.ranking ? "w-10" : "min-w-16 max-w-20"}`}>
-                          <p className="text-[10px] text-center p-1">
+                        <div className={`w-full mb-1 mt-2 ${book.ranking ? "w-10" : "min-w-16 max-w-20"}`}>
+                          <p className={`text-[10px] text-center w-full p-1 ${isColorDark(backgroundColor) ? "text-white" : "text-black"}`}>
                             {(() => {
                               const favoriteIcon = book.favorito == 1 ? "💜" : "";
                               if (!book.ranking) return `Sem nota ${favoriteIcon}`;
@@ -337,10 +345,21 @@ export default function Home() {
                   </div>
                 </BooksContainer>
                 <div style={{ position: "absolute", left: "-9999px" }} ref={exportRef}>
-                  <TwitterRecap books={readBooksInThisMonth} stats={bookStats} type={type} />
+                  <TwitterRecap books={readBooksInThisMonth} stats={bookStats} type={type} backgroundColor={backgroundColor} textColor={isColorDark(backgroundColor) ? "white" : "black"} />
                 </div>
               </>
             )}
+            <div className="flex flex-col items-center mt-4">
+              <label htmlFor="hs-color-input" className="block text-sm font-medium mb-2">escolha a cor de fundo</label>
+              <input 
+                type="color" 
+                className="p-1 h-10 w-14 block bg-white border border-gray-200 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700" 
+                id="hs-color-input"
+                onChange={(e) => setBackgroundColor(e.target.value)}
+                value={backgroundColor}
+                title="escolha sua cor" 
+              />
+            </div>
             <div className="mt-5 flex gap-4">
               <button
                 onClick={htmlToImageConvert}
