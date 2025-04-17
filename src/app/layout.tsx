@@ -9,8 +9,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Skoob recap",
-  description: "A simple app to show your reading stats from Skoob",
+  title: "rekoob - skoob recap",
+  description: "Veja seu resumo do skoob",
 };
 
 export default function RootLayout({
