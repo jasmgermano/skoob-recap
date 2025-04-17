@@ -84,7 +84,11 @@ export function TwitterRecap({ books, stats, type }: TwitterRecapProps) {
                     minWidth: "60px",
                   }}
                 >
-                  {book.ranking ? `${book.ranking} ⭐` : "Sem nota"}
+                  {(() => {
+                    const favoriteIcon = book.favorito == 1 ? "💜" : "";
+                    if (!book.ranking) return `Sem nota ${favoriteIcon}`;
+                    return `${book.ranking} ⭐ ${favoriteIcon}`;
+                  })()}
                 </p>
               </div>
             ))}

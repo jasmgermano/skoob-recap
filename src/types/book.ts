@@ -7,5 +7,6 @@ export interface Book {
       capa_grande: string;
     };
     ranking: number;  
+    favorito: number;
 }
   
