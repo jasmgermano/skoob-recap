@@ -1,6 +1,5 @@
 import { Book } from "@/types/book";
 import { BookCover } from "./bookCover";
-import { text } from "node:stream/consumers";
 
 type TwitterRecapProps = {
   books: Book[];
@@ -11,8 +10,6 @@ type TwitterRecapProps = {
     lowestRating: Book | null;
   };
   type: "recap" | "general";
-  backgroundColor?: string;
-  textColor?: string;
 };
 
 export function TwitterRecap({ books, stats, type, backgroundColor, textColor }: TwitterRecapProps) {
@@ -27,15 +24,15 @@ export function TwitterRecap({ books, stats, type, backgroundColor, textColor }:
     return stars;
   }
 
-  console.log(textColor)
+
   return (
     <div
       style={{
         width: "1200px",
         height: "675px",
         padding: "3rem",
-        backgroundColor: backgroundColor,
-        color: textColor,
+        backgroundColor: "#fff",
+        color: "#000",
         fontFamily: "Poppins, sans-serif",
         boxSizing: "border-box",
       }}
@@ -85,7 +82,6 @@ export function TwitterRecap({ books, stats, type, backgroundColor, textColor }:
                     padding: "4px 8px",
                     borderRadius: "9999px",
                     minWidth: "60px",
-                    color: textColor,
                   }}
                 >
                   {(() => {
