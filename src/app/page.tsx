@@ -213,8 +213,8 @@ export default function Home() {
   }, [bookStats]);
 
   return (
-    <div className="flex items-stretch justify-center min-h-screen py-2 font-[family-name:var(--font-poppins)] sm:p-10 px-4">    
-      <div className="w-full max-w-6xl min-h-[300px] bg-white rounded-4xl flex justify-center items-center flex-col gap-3 p-4 sm:p-5 py-14 sm:bg-primary md:shadow-md md:rounded-2xl md:p-10">
+    <div className="flex flex-col items-center justify-between min-h-screen py-2 font-[family-name:var(--font-poppins)] sm:p-10 px-4">    
+      <div className="w-full max-w-6xl min-h-[600px] bg-white rounded-4xl flex justify-center items-center flex-col gap-3 p-4 sm:p-5 py-14 sm:bg-primary md:shadow-md md:rounded-2xl md:p-10">
         <div className="flex flex-col items-center gap-3 w-full bg-primary rounded-4xl p-4 pt-10 sm:bg-none transition-all duration-500 ease-in-out"
           style={{ marginTop: inputPosition === 'top' ? '2rem' : '0rem' }}
         >
@@ -385,6 +385,9 @@ export default function Home() {
           </>
         )}
       </div>
+      <footer className="w-full max-w-6xl mt-10 text-center text-xs sm:text-sm text-gray-500">
+        <p>um site <span className="font-semibold">BeMine</span> | feito com 💜 por <a href="https://www.linkedin.com/in/jasmgermano/" target="_blank" rel="noopener noreferrer" className="text-[#8D65C5] font-semibold">jasmine ⭐</a> e <a href="https://www.linkedin.com/in/isabelle-sgrignero/" target="_blank" rel="noopener noreferrer" className="text-[#8D65C5] font-semibold">isabelle 🐝</a></p>
+      </footer>
     </div>
   );
 }
