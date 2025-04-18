@@ -221,7 +221,7 @@ export default function Home() {
           <span className="text-[12px] sm:text-small -mb-2">⋆ BeMine Presents ⋆</span>
           <Image src={Logo} alt="Logo" className="w-20 sm:w-28" />
           <h1 className="text-2xl">lidos no mês de</h1>
-          <h2 className="text-4xl text-center font-medium -mt-5 mb-5 flex items-center gap-1"><span className="text-xl">‧₊˚🖇️✩</span>{month}</h2>
+          <h2 className="text-4xl text-center font-medium -mt-5 mb-5 flex items-center gap-1"><span className="text-xl">‧₊˚📚✩</span>{month}<span className="text-xl">✩📚˚₊‧</span></h2>
           <form onSubmit={handleSubmit} className="flex items-center w-full max-w-xl">
             <div className="flex flex-col sm:flex-row items-center justify-between w-full gap-3 sm:gap-0 sm:bg-white rounded-full">
               <div className="flex items-center justify-center w-full bg-white rounded-full">
