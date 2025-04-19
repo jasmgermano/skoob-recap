@@ -8,17 +8,27 @@ type BookGridProps = {
 };
 
 export function BookGrid({ books, backgroundColor, textColor }: BookGridProps) {
-  const centerBooks = books.length <= 2;
-
-  if (centerBooks) {
+    const bookCount = books.length;
+  
+    const getBookWidth = () => {
+      if (bookCount === 1) return 220;
+      if (bookCount === 2) return 180;
+      if (bookCount <= 4) return 160;
+      if (bookCount > 10) return 140;
+      return 170;
+    };
+  
+    const bookWidth = getBookWidth();
+  
     return (
       <div
         style={{
           display: "flex",
+          flexWrap: "wrap",
           justifyContent: "center",
-          alignItems: "center",
           gap: "1.5rem",
-          width: "100%",
+          maxWidth: "1100px",
+          margin: "0 auto",
         }}
       >
         {books.map((book) => (
@@ -27,33 +37,10 @@ export function BookGrid({ books, backgroundColor, textColor }: BookGridProps) {
             book={book}
             backgroundColor={backgroundColor}
             textColor={textColor}
+            width={bookWidth}
           />
         ))}
       </div>
     );
   }
-
-  return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
-        gap: "1.5rem",
-        justifyContent: "center",
-        alignItems: "start",
-        maxWidth: "1100px",
-        width: "100%",
-        margin: "0 auto",
-      }}
-    >
-      {books.map((book) => (
-        <BookItem
-          key={book.edicao.id}
-          book={book}
-          backgroundColor={backgroundColor}
-          textColor={textColor}
-        />
-      ))}
-    </div>
-  );
-}
+  
