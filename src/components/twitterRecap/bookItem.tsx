@@ -36,7 +36,7 @@ export function BookItem({ book, backgroundColor, textColor }: BookItemProps) {
       </div>
       <p
         style={{
-          fontSize: "12px",
+          fontSize: "18px",
           marginTop: "0.5rem",
           textAlign: "center",
           padding: "4px 8px",
