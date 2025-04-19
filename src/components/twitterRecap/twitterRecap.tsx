@@ -1,6 +1,5 @@
 import { Book } from "@/types/book";
 import { BookCover } from "../bookCover";
-import { fontWeight } from "html2canvas/dist/types/css/property-descriptors/font-weight";
 import RecapContainer from "./recapContainer";
 import { BookGrid } from "./bookGrid";
 
