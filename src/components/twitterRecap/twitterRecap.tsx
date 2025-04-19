@@ -2,8 +2,6 @@ import { Book } from "@/types/book";
 import { BookCover } from "../bookCover";
 import RecapContainer from "./recapContainer";
 import { BookGrid } from "./bookGrid";
-import Rekoob from "../../../public/rekoob.png";
-import Image from "next/image";
 
 type TwitterRecapProps = {
   books: Book[];
