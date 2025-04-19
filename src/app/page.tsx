@@ -8,7 +8,7 @@ import { validateSearch } from "@/validations/validators";
 import { BooksContainer } from "@/components/booksContainer";
 import { BookCover } from "@/components/bookCover";
 import html2canvas from 'html2canvas';
-import { TwitterRecap } from "@/components/twitterRecap";
+import { TwitterRecap } from "@/components/twitterRecap/twitterRecap";
 import Logo from "../../public/images/logo.png";
 import Image from "next/image";
 
