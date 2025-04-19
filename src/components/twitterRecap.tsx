@@ -1,5 +1,6 @@
 import { Book } from "@/types/book";
 import { BookCover } from "./bookCover";
+import { fontWeight } from "html2canvas/dist/types/css/property-descriptors/font-weight";
 
 type TwitterRecapProps = {
   books: Book[];
@@ -15,6 +16,8 @@ type TwitterRecapProps = {
 };
 
 export function TwitterRecap({ books, stats, type, backgroundColor, textColor }: TwitterRecapProps) {
+
+  const centerBooks = books.length <= 2;
 
   function renderStars(rating: number): string {
     const fullStars = Math.floor(rating);
@@ -35,7 +38,7 @@ export function TwitterRecap({ books, stats, type, backgroundColor, textColor }:
         padding: "3rem",
         backgroundColor: backgroundColor,
         color: textColor,
-        fontFamily: "Poppins, sans-serif",
+        fontFamily: "var(--font-poppins)",
         boxSizing: "border-box",
       }}
     >
@@ -46,56 +49,121 @@ export function TwitterRecap({ books, stats, type, backgroundColor, textColor }:
             justifyContent: "center",
             alignItems: "center",
             height: "100%",
+            width: "100%",
           }}
         >
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
-              gap: "1.5rem",
-              justifyContent: "center",
-              alignItems: "start",
-              width: "100%",
-              maxWidth: "1100px",
-            }}
-          >
-            {books.map((book) => (
-              <div
-                key={book.edicao.id}
-                style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
-              >
+          {centerBooks ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "1.5rem",
+                width: "100%",
+              }}
+            >
+              {books.map((book) => (
                 <div
+                  key={book.edicao.id}
                   style={{
-                    width: "100%",
-                    aspectRatio: "2 / 3",
-                    overflow: "hidden",
-                    borderRadius: "6px",
-                    boxShadow: "0 0 6px rgba(0,0,0,0.1)",
-                    backgroundColor: "#f4f4f4",
+                    width: "140px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
                   }}
                 >
-                  <BookCover book={book} />
+                  <div
+                    style={{
+                      width: "100%",
+                      aspectRatio: "2 / 3",
+                      overflow: "hidden",
+                      borderRadius: "6px",
+                      boxShadow: "0 0 6px rgba(0,0,0,0.1)",
+                      backgroundColor: backgroundColor,
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <BookCover book={book} />
+                  </div>
+                  <p
+                    style={{
+                      fontSize: "12px",
+                      marginTop: "0.5rem",
+                      textAlign: "center",
+                      padding: "4px 8px",
+                      borderRadius: "9999px",
+                      minWidth: "60px",
+                      color: textColor,
+                      fontWeight: 700,
+                    }}
+                  >
+                    {(() => {
+                      const favoriteIcon = book.favorito == 1 ? "💜 " : " ";
+                      if (!book.ranking) return `Sem nota ${favoriteIcon}`;
+                      return `${book.ranking} ⭐${favoriteIcon}`;
+                    })()}
+                  </p>
                 </div>
-                <p
+              ))}
+            </div>
+          ) : (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+                gap: "1.5rem",
+                justifyContent: "center",
+                alignItems: "start",
+                maxWidth: "1100px",
+                width: "100%",
+                margin: "0 auto",
+              }}
+            >
+              {books.map((book) => (
+                <div
+                  key={book.edicao.id}
                   style={{
-                    fontSize: "12px",
-                    marginTop: "0.5rem",
-                    textAlign: "center",
-                    padding: "4px 8px",
-                    borderRadius: "9999px",
-                    minWidth: "60px",
-                    color: textColor,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
                   }}
                 >
-                  {(() => {
-                    const favoriteIcon = book.favorito == 1 ? "💜" : "";
-                    if (!book.ranking) return `Sem nota ${favoriteIcon}`;
-                    return `${book.ranking} ⭐ ${favoriteIcon}`;
-                  })()}
-                </p>
-              </div>
-            ))}
-          </div>
+                  <div
+                    style={{
+                      width: "100%",
+                      aspectRatio: "2 / 3",
+                      overflow: "hidden",
+                      borderRadius: "6px",
+                      boxShadow: "0 0 6px rgba(0,0,0,0.1)",
+                      backgroundColor: backgroundColor,
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <BookCover book={book} />
+                  </div>
+                  <p
+                    style={{
+                      fontSize: "12px",
+                      marginTop: "0.5rem",
+                      textAlign: "center",
+                      padding: "4px 8px",
+                      minWidth: "60px",
+                      color: textColor,
+                      fontWeight: 700,
+                    }}
+                  >
+                    {(() => {
+                      const favoriteIcon = book.favorito == 1 ? "💜" : "";
+                      if (!book.ranking) return `Sem nota ${favoriteIcon}`;
+                      return `${book.ranking} ⭐${favoriteIcon}`;
+                    })()}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
