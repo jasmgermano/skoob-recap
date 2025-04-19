@@ -2,6 +2,8 @@ import { Book } from "@/types/book";
 import { BookCover } from "../bookCover";
 import RecapContainer from "./recapContainer";
 import { BookGrid } from "./bookGrid";
+import Rekoob from "../../../public/rekoob.png";
+import Image from "next/image";
 
 type TwitterRecapProps = {
   books: Book[];
@@ -97,6 +99,7 @@ export function TwitterRecap({ books, stats, type, backgroundColor, textColor }:
           </div>
         </RecapContainer>
       )}
+      <img src={`/images/rekoob-${textColor}.png`} alt="Rekoob" width={100} style={{ position: "absolute", bottom: "1rem", right: "1rem" }} />
     </div>
   );
 }
