@@ -9,7 +9,7 @@ export const BookCover = ({ book, coverHeight, coverWidth }: { book: Book, cover
                 alt={book.edicao.nome_portugues}
                 width={coverWidth}
                 height={coverHeight}
-                className="custom-box-shadow h-full object-cover rounded-sm"
+                className="custom-box-shadow h-full object-cover rounded-[6px]"
          />
     );
 }

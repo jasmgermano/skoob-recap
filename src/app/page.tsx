@@ -332,7 +332,7 @@ export default function Home() {
                           <BookCover book={book} />
                         </div>
                         <div className={`w-full mb-1 mt-2 ${book.ranking ? "w-10" : "min-w-16 max-w-20"}`}>
-                          <p className={`text-[10px] text-center w-full p-1 ${isColorDark(backgroundColor) ? "text-white" : "text-black"}`}>
+                          <p className={`font-semibold text-[10px] text-center w-full p-1 ${isColorDark(backgroundColor) ? "text-white" : "text-black"}`}>
                             {(() => {
                               const favoriteIcon = book.favorito == 1 ? "💜" : "";
                               if (!book.ranking) return `Sem nota ${favoriteIcon}`;
