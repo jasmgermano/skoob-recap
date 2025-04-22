@@ -34,7 +34,7 @@ export function TwitterRecap({ books, stats, type, backgroundColor, textColor }:
       style={{
         width: "1200px",
         height: "675px",
-        padding: "3rem",
+        padding: "1.5rem",
         backgroundColor: backgroundColor,
         color: textColor,
         fontFamily: "var(--font-poppins)",

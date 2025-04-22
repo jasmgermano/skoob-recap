@@ -10,15 +10,21 @@ type BookGridProps = {
 export function BookGrid({ books, backgroundColor, textColor }: BookGridProps) {
     const bookCount = books.length;
   
-    const getBookWidth = () => {
-      if (bookCount === 1) return 220;
-      if (bookCount === 2) return 180;
-      if (bookCount <= 4) return 160;
-      if (bookCount > 10) return 140;
-      return 170;
+    const getBookWidth = (bookCount: number): number => {
+      const containerWidth = 1100;
+      const sidePadding = 24 * 2; 
+      const gap = 24 * 2;    
+      const maxColumns = Math.min(bookCount, 6);
+      const availableWidth = containerWidth - sidePadding - gap * (maxColumns - 1);
+      const bookWidth = Math.floor(availableWidth / maxColumns);
+
+      console.log("Largura do livro:", bookWidth);
+    
+      return bookWidth;
     };
+      
   
-    const bookWidth = getBookWidth();
+    const bookWidth = getBookWidth(bookCount);
   
     return (
       <div
