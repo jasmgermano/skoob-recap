@@ -18,7 +18,9 @@ export function BookGrid({ books, backgroundColor, textColor }: BookGridProps) {
       const availableWidth = containerWidth - sidePadding - gap * (maxColumns - 1);
       const bookWidth = Math.floor(availableWidth / maxColumns);
 
-      console.log("Largura do livro:", bookWidth);
+      if (bookWidth > 200) {
+        return 200; 
+      }
     
       return bookWidth;
     };
