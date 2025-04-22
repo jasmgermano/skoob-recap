@@ -318,7 +318,7 @@ export default function Home() {
                   </div>
                 </BooksContainer>
                 <div style={{ position: "absolute", left: "-9999px" }} ref={exportRef}>
-                  <TwitterRecap books={readBooksInThisMonth} stats={bookStats} type={type} backgroundColor={backgroundColor} textColor={isColorDark(backgroundColor) ? "text-white" : "text-black"} />
+                  <TwitterRecap books={readBooksInThisMonth} stats={bookStats} type={type} backgroundColor={backgroundColor} textColor={isColorDark(backgroundColor) ? "white" : "black"} />
                 </div>
               </div>
             )}
