@@ -36,27 +36,28 @@ export default function Home() {
   const [type, setType] = useState<"recap" | "general" | "">("recap");
   const [readBooksInThisMonth, setReadBooksInThisMonth] = useState<Book[]>([]);
   const [backgroundColor, setBackgroundColor] = useState("#ffffff");
-  
+  const [selectedMonthOffset, setSelectedMonthOffset] = useState(0);
+
   const elementRef = useRef<HTMLDivElement>(null);
   const exportRef = useRef<HTMLDivElement>(null);
 
   const hasAnyBookStats = Object.values(bookStats).some(stat => stat !== null);
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-
+  async function handleSubmit(e?: React.FormEvent) {
+    if (e) e.preventDefault();
+  
     setError(false);
     setErrorMessage("");
-
+  
     const { id, validationMessage } = validateSearch(search);
     if (validationMessage) {
       setError(true);
       setErrorMessage(validationMessage);
       return;
     }
-
+  
     if (!id) return;
-
+  
     setLoading(true);
     try {
       const data = await getUserBooks(id);
@@ -65,74 +66,77 @@ export default function Home() {
         setErrorMessage("Erro ao buscar livros do usuário");
         return;
       }
-
+  
       if (data.response.length === 0) {
         setError(true);
         setErrorMessage("Nenhum livro encontrado");
         return;
       }
-
+  
+      const now = new Date();
+      now.setUTCMonth(now.getUTCMonth() + selectedMonthOffset);
+  
       const readBooksInThisMonth = data.response.filter((book: { tipo: number, dt_leitura: string }) => {
         if (!book.dt_leitura) return false;
-
+  
         const rawDate = book.dt_leitura.trim();
         const [datePart] = rawDate.split(" ");
         const [year, month, day] = datePart.split("-");
-
+  
         if (!day || !month || !year) {
           console.warn("Data inválida encontrada:", book.dt_leitura);
           return false;
         }
-
+  
         const bookDate = new Date(Date.UTC(
           parseInt(year),
           parseInt(month) - 1,
           parseInt(day)
         ));
-
+  
         return (
           book.tipo === 1 &&
-          bookDate.getUTCMonth() === new Date().getUTCMonth() &&
-          bookDate.getUTCFullYear() === new Date().getUTCFullYear()
+          bookDate.getUTCMonth() === now.getUTCMonth() &&
+          bookDate.getUTCFullYear() === now.getUTCFullYear()
         );
       });
-
+  
       setReadBooksInThisMonth(readBooksInThisMonth);
       if (readBooksInThisMonth.length === 0) {
         setError(true);
         setErrorMessage("Nenhum livro lido neste mês");
         return;
       }
-
+  
       const biggestBook = readBooksInThisMonth.reduce((acc: Book | null, book: Book) => {
         if (!acc) return book;
         return book.edicao.paginas > acc.edicao.paginas ? book : acc;
       }, null);
-
+  
       const smallestBook = readBooksInThisMonth.reduce((acc: Book | null, book: Book) => {
         if (!acc) return book;
         return book.edicao.paginas < acc.edicao.paginas ? book : acc;
       }, null);
-
+  
       const highestRating = readBooksInThisMonth.reduce((acc: Book | null, book: Book) => {
         if (book.ranking === 0) return acc;
         if (!acc) return book;
         return book.ranking > acc.ranking ? book : acc;
       }, null);
-
+  
       const lowestRating = readBooksInThisMonth.reduce((acc: Book | null, book: Book) => {
         if (book.ranking === 0) return acc;
         if (!acc) return book;
         return book.ranking < acc.ranking ? book : acc;
       }, null);
-
+  
       setBookStats({
         biggest: biggestBook,
         smallest: smallestBook,
         highestRating,
         lowestRating,
       });
-
+  
     } catch (error) {
       console.error(error);
       setError(true);
@@ -140,15 +144,15 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
-  }
+  }  
 
   const htmlToImageConvert = () => {
     const node = exportRef.current;
 
     if (!node) return;
-  
+
     const images = node.querySelectorAll("img");
-  
+
     const imageLoadPromises = Array.from(images).map((img) => {
       if (img.complete && img.naturalHeight !== 0) return Promise.resolve();
       return new Promise((resolve) => {
@@ -156,7 +160,7 @@ export default function Home() {
         img.onerror = () => resolve(null);
       });
     });
-  
+
     Promise.all(imageLoadPromises).then(() => {
       html2canvas(node, {
         useCORS: true,
@@ -172,36 +176,45 @@ export default function Home() {
       });
     });
   };
-  
+
   function isColorDark(hex: string): boolean {
     const r = parseInt(hex.substr(1, 2), 16);
     const g = parseInt(hex.substr(3, 2), 16);
     const b = parseInt(hex.substr(5, 2), 16);
     const brightness = (r * 299 + g * 587 + b * 114) / 1000;
     return brightness < 128;
-  }  
+  }
 
   useEffect(() => {
-    const monthName = new Date().toLocaleString("pt-br", { month: "long" });
+    const now = new Date();
+    now.setUTCMonth(now.getUTCMonth() + selectedMonthOffset);
+    const monthName = now.toLocaleString("pt-br", { month: "long" });
     setMonth(monthName);
-  }, []);
+  }, [selectedMonthOffset]);
 
   useEffect(() => {
-    if (error || search === "") {
+    const { id } = validateSearch(search);
+    
+    if (id) {
+      handleSubmit();
+    }
+  }, [selectedMonthOffset]);  
+
+  useEffect(() => {
+    if (search === "") {
       setInputPosition("top");
-      setTimeout(() => {
-        setShowBookStats(false);
-      }, 300);
-      setTimeout(() => {
-        setError(false);
-        setErrorMessage("");
-        setBookStats({
-          biggest: null,
-          smallest: null,
-          highestRating: null,
-          lowestRating: null,
-        });
-      }, 3000);
+      setShowBookStats(false);
+      setError(false);
+      setErrorMessage("");
+      setBookStats({
+        biggest: null,
+        smallest: null,
+        highestRating: null,
+        lowestRating: null,
+      });
+    } else if (error) {
+      setInputPosition("top");
+      setShowBookStats(false);
     }
   }, [error, search]);
 
@@ -213,7 +226,7 @@ export default function Home() {
   }, [bookStats]);
 
   return (
-    <div className="flex flex-col items-center justify-between min-h-screen py-2 font-[family-name:var(--font-poppins)] sm:p-10 px-4">    
+    <div className="flex flex-col items-center justify-between min-h-screen py-2 font-[family-name:var(--font-poppins)] sm:p-10 px-4">
       <div className="w-full max-w-6xl min-h-[600px] bg-white rounded-4xl flex justify-center items-center flex-col gap-3 p-4 sm:p-5 py-14 sm:bg-primary md:shadow-md md:rounded-2xl md:p-10">
         <div className="flex flex-col items-center gap-3 w-full bg-primary rounded-4xl p-4 pt-10 sm:bg-none transition-all duration-500 ease-in-out"
           style={{ marginTop: inputPosition === 'top' ? '2rem' : '0rem' }}
@@ -222,6 +235,20 @@ export default function Home() {
           <Image src={Logo} alt="Logo" className="w-20 sm:w-28" />
           <h1 className="text-2xl">lidos no mês de</h1>
           <h2 className="text-4xl text-center font-medium -mt-5 mb-5 flex items-center gap-1"><span className="text-xl">‧₊˚📚✩</span>{month}<span className="text-xl">✩📚˚₊‧</span></h2>
+          <div className="flex gap-2 mb-2">
+            <button
+              onClick={() => setSelectedMonthOffset(0)}
+              className={`px-3 py-1 rounded-full text-sm ${selectedMonthOffset === 0 ? 'bg-secondary text-white' : 'bg-gray-200'}`}
+            >
+              Este mês
+            </button>
+            <button
+              onClick={() => setSelectedMonthOffset(-1)}
+              className={`px-3 py-1 rounded-full text-sm ${selectedMonthOffset === -1 ? 'bg-secondary text-white' : 'bg-gray-200'}`}
+            >
+              Mês anterior
+            </button>
+          </div>
           <form onSubmit={handleSubmit} className="flex items-center w-full max-w-xl">
             <div className="flex flex-col sm:flex-row items-center justify-between w-full gap-3 sm:gap-0 sm:bg-white rounded-full">
               <div className="flex items-center justify-center w-full bg-white rounded-full">
@@ -351,13 +378,13 @@ export default function Home() {
             )}
             <div className="flex flex-col items-center mt-4">
               <label htmlFor="hs-color-input" className="block text-sm font-medium mb-2">escolha a cor de fundo</label>
-              <input 
-                type="color" 
-                className="p-1 h-10 w-14 block bg-white border border-gray-200 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700" 
+              <input
+                type="color"
+                className="p-1 h-10 w-14 block bg-white border border-gray-200 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700"
                 id="hs-color-input"
                 onChange={(e) => setBackgroundColor(e.target.value)}
                 value={backgroundColor}
-                title="escolha sua cor" 
+                title="escolha sua cor"
               />
             </div>
             <div className="mt-5 flex gap-4">
@@ -380,7 +407,7 @@ export default function Home() {
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 16 16"><path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334v-.426A6.672 6.672 0 0 0 16 3.542a6.575 6.575 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.084.797A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.381A3.323 3.323 0 0 1 .64 6.575v.041a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.617-.057 3.29 3.29 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045 9.344 9.344 0 0 0 5.026 1.465" /></svg>
                 <span className="text-xs">Compartilhar no Twitter</span>
-            </button>
+              </button>
             </div>
           </>
         )}
