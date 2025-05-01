@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import Script from "next/script";
 
 const poppins = Poppins({
   variable: '--font-poppins',
@@ -21,11 +20,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Script
-        async
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5761478072622716"
-        crossOrigin="anonymous"
-      />
+      <head>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5761478072622716"
+        crossOrigin="anonymous"></script>
+      </head>
       <body
         className={`${poppins.variable} antialiased`}
       >
