@@ -412,7 +412,8 @@ export default function Home() {
           </>
         )}
       </div>
-      <footer className="w-full max-w-6xl mt-10 text-center text-xs sm:text-sm text-gray-500">
+      <footer className="w-full max-w-6xl mt-10 text-center text-xs flex flex-col items-center gap-2 sm:text-sm text-gray-500">
+        <a href="https://www.buymeacoffee.com/jasmgermano"><img className="h-10" src="https://img.buymeacoffee.com/button-api/?text=compre um café pra gente!&emoji=💌&slug=jasmgermano&button_colour=eee2ee&font_colour=000000&font_family=Poppins&outline_colour=000000&coffee_colour=FFDD00" /></a>
         <p>um site <span className="font-semibold">BeMine</span> | feito com 💜 por <a href="https://www.linkedin.com/in/jasmgermano/" target="_blank" rel="noopener noreferrer" className="text-[#8D65C5] font-semibold">jasmine ⭐</a> e <a href="https://www.linkedin.com/in/isabelle-sgrignero/" target="_blank" rel="noopener noreferrer" className="text-[#8D65C5] font-semibold">isabelle 🐝</a></p>
       </footer>
     </div>
