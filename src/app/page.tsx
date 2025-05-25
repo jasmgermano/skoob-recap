@@ -37,6 +37,7 @@ export default function Home() {
   const [readBooksInThisMonth, setReadBooksInThisMonth] = useState<Book[]>([]);
   const [backgroundColor, setBackgroundColor] = useState("#ffffff");
   const [selectedMonthOffset, setSelectedMonthOffset] = useState(0);
+  const [showMessage, setShowMessage] = useState(false);
 
   const elementRef = useRef<HTMLDivElement>(null);
   const exportRef = useRef<HTMLDivElement>(null);
@@ -74,7 +75,7 @@ export default function Home() {
       }
   
       const now = new Date();
-      now.setUTCMonth(now.getUTCMonth() + selectedMonthOffset);
+      now.setUTCMonth(1);
   
       const readBooksInThisMonth = data.response.filter((book: { tipo: number, dt_leitura: string }) => {
         if (!book.dt_leitura) return false;
@@ -224,6 +225,14 @@ export default function Home() {
       setShowBookStats(true);
     }
   }, [bookStats]);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText('00020126580014BR.GOV.BCB.PIX0136c0914b66-8219-48e5-ad8b-c60aca654cb55204000053039865802BR5922Jasmine Germano Franca6009SAO PAULO62140510xm3wekMtUM6304254B');
+    setShowMessage(true);
+    setTimeout(() => {
+      setShowMessage(false);
+    }, 3000);
+  };
 
   return (
     <div className="flex flex-col items-center justify-between min-h-screen py-2 font-[family-name:var(--font-poppins)] sm:p-10 px-4">
@@ -413,7 +422,19 @@ export default function Home() {
         )}
       </div>
       <footer className="w-full max-w-6xl mt-10 text-center text-xs flex flex-col items-center gap-2 sm:text-sm text-gray-500">
-        <a href="https://www.buymeacoffee.com/jasmgermano"><img className="h-10" src="https://img.buymeacoffee.com/button-api/?text=compre um café pra gente!&emoji=💌&slug=jasmgermano&button_colour=eee2ee&font_colour=000000&font_family=Poppins&outline_colour=000000&coffee_colour=FFDD00" /></a>
+        <div className="relative">
+          <button
+            className="bg-secondary p-2 rounded-lg cursor-pointer text-black"
+            onClick={handleCopy}
+          >
+            {showMessage ? (
+              <span>☕ Código pix copiado! Obrigada ⋆</span>
+            ) : (
+              <span>💌 Compre um café pra gente</span>
+            )}
+            
+          </button>
+        </div>
         <p>um site <span className="font-semibold">BeMine</span> | feito com 💜 por <a href="https://www.linkedin.com/in/jasmgermano/" target="_blank" rel="noopener noreferrer" className="text-[#8D65C5] font-semibold">jasmine ⭐</a> e <a href="https://www.linkedin.com/in/isabelle-sgrignero/" target="_blank" rel="noopener noreferrer" className="text-[#8D65C5] font-semibold">isabelle 🐝</a></p>
       </footer>
     </div>
