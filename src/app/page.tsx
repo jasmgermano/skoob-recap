@@ -75,7 +75,7 @@ export default function Home() {
       }
   
       const now = new Date();
-      now.setUTCMonth(1);
+      now.setUTCMonth(now.getUTCMonth() + selectedMonthOffset);
   
       const readBooksInThisMonth = data.response.filter((book: { tipo: number, dt_leitura: string }) => {
         if (!book.dt_leitura) return false;
