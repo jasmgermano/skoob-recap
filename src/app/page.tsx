@@ -8,9 +8,9 @@ import { validateSearch } from "@/validations/validators";
 import html2canvas from 'html2canvas';
 import Logo from "../../public/images/logo.png";
 import Image from "next/image";
-// import { TwitterRecap } from "@/components/twitterRecap/twitterRecap";
-// import { BooksContainer } from "@/components/booksContainer";
-// import { BookCover } from "@/components/bookCover";
+import { TwitterRecap } from "@/components/twitterRecap/twitterRecap";
+import { BooksContainer } from "@/components/booksContainer";
+import { BookCover } from "@/components/bookCover";
 
 type BookStats = {
   biggest: Book | null;
@@ -20,14 +20,14 @@ type BookStats = {
 };
 
 export default function Home() {
-  // const [search, setSearch] = useState("");
-  // const [loading, setLoading] = useState(false);
-  // const [errorMessage, setErrorMessage] = useState("");
-  // const [showBookStats, setShowBookStats] = useState(false);
-  // const [type, setType] = useState<"recap" | "general" | "">("recap");
-  // const [readBooksInThisMonth, setReadBooksInThisMonth] = useState<Book[]>([]);
-  // const [backgroundColor, setBackgroundColor] = useState("#ffffff");
-  // const [selectedMonthOffset, setSelectedMonthOffset] = useState(0);
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showBookStats, setShowBookStats] = useState(false);
+  const [type, setType] = useState<"recap" | "general" | "">("recap");
+  const [readBooksInThisMonth, setReadBooksInThisMonth] = useState<Book[]>([]);
+  const [backgroundColor, setBackgroundColor] = useState("#ffffff");
+  const [selectedMonthOffset, setSelectedMonthOffset] = useState(0);
   const [bookStats, setBookStats] = useState<BookStats>({
     biggest: null,
     smallest: null,
@@ -39,192 +39,192 @@ export default function Home() {
   const [inputPosition, setInputPosition] = useState<"center" | "top">("center");
   const [showMessage, setShowMessage] = useState(false);
 
-  // const elementRef = useRef<HTMLDivElement>(null);
+  const elementRef = useRef<HTMLDivElement>(null);
   const exportRef = useRef<HTMLDivElement>(null);
 
   const hasAnyBookStats = Object.values(bookStats).some(stat => stat !== null);
 
-  // async function handleSubmit(e?: React.FormEvent) {
-  //   if (e) e.preventDefault();
+  async function handleSubmit(e?: React.FormEvent) {
+    if (e) e.preventDefault();
 
-  //   setError(false);
-  //   setErrorMessage("");
+    setError(false);
+    setErrorMessage("");
 
-  //   const { id, validationMessage } = validateSearch(search);
-  //   if (validationMessage) {
-  //     setError(true);
-  //     setErrorMessage(validationMessage);
-  //     return;
-  //   }
+    const { id, validationMessage } = validateSearch(search);
+    if (validationMessage) {
+      setError(true);
+      setErrorMessage(validationMessage);
+      return;
+    }
 
-  //   if (!id) return;
+    if (!id) return;
 
-  //   setLoading(true);
-  //   try {
-  //     const data = await getUserBooks(id);
-  //     if (!data.response) {
-  //       setError(true);
-  //       setErrorMessage("Erro ao buscar livros do usuário");
-  //       return;
-  //     }
+    setLoading(true);
+    try {
+      const data = await getUserBooks(id);
+      if (!data.response) {
+        setError(true);
+        setErrorMessage("Erro ao buscar livros do usuário");
+        return;
+      }
 
-  //     if (data.response.length === 0) {
-  //       setError(true);
-  //       setErrorMessage("Nenhum livro encontrado");
-  //       return;
-  //     }
+      if (data.response.length === 0) {
+        setError(true);
+        setErrorMessage("Nenhum livro encontrado");
+        return;
+      }
 
-  //     const now = new Date();
-  //     now.setUTCMonth(now.getUTCMonth() + selectedMonthOffset);
+      const now = new Date();
+      now.setUTCMonth(now.getUTCMonth() + selectedMonthOffset);
 
-  //     const readBooksInThisMonth = data.response.filter((book: { tipo: number, dt_leitura: string }) => {
-  //       if (!book.dt_leitura) return false;
+      const readBooksInThisMonth = data.response.filter((book: { tipo: number, dt_leitura: string }) => {
+        if (!book.dt_leitura) return false;
 
-  //       const rawDate = book.dt_leitura.trim();
-  //       const [datePart] = rawDate.split(" ");
-  //       const [year, month, day] = datePart.split("-");
+        const rawDate = book.dt_leitura.trim();
+        const [datePart] = rawDate.split(" ");
+        const [year, month, day] = datePart.split("-");
 
-  //       if (!day || !month || !year) {
-  //         console.warn("Data inválida encontrada:", book.dt_leitura);
-  //         return false;
-  //       }
+        if (!day || !month || !year) {
+          console.warn("Data inválida encontrada:", book.dt_leitura);
+          return false;
+        }
 
-  //       const bookDate = new Date(Date.UTC(
-  //         parseInt(year),
-  //         parseInt(month) - 1,
-  //         parseInt(day)
-  //       ));
+        const bookDate = new Date(Date.UTC(
+          parseInt(year),
+          parseInt(month) - 1,
+          parseInt(day)
+        ));
 
-  //       return (
-  //         book.tipo === 1 &&
-  //         bookDate.getUTCMonth() === now.getUTCMonth() &&
-  //         bookDate.getUTCFullYear() === now.getUTCFullYear()
-  //       );
-  //     });
+        return (
+          book.tipo === 1 &&
+          bookDate.getUTCMonth() === now.getUTCMonth() &&
+          bookDate.getUTCFullYear() === now.getUTCFullYear()
+        );
+      });
 
-  //     setReadBooksInThisMonth(readBooksInThisMonth);
-  //     if (readBooksInThisMonth.length === 0) {
-  //       setError(true);
-  //       setErrorMessage("Nenhum livro lido neste mês");
-  //       return;
-  //     }
+      setReadBooksInThisMonth(readBooksInThisMonth);
+      if (readBooksInThisMonth.length === 0) {
+        setError(true);
+        setErrorMessage("Nenhum livro lido neste mês");
+        return;
+      }
 
-  //     const biggestBook = readBooksInThisMonth.reduce((acc: Book | null, book: Book) => {
-  //       if (!acc) return book;
-  //       return book.edicao.paginas > acc.edicao.paginas ? book : acc;
-  //     }, null);
+      const biggestBook = readBooksInThisMonth.reduce((acc: Book | null, book: Book) => {
+        if (!acc) return book;
+        return book.edicao.paginas > acc.edicao.paginas ? book : acc;
+      }, null);
 
-  //     const smallestBook = readBooksInThisMonth.reduce((acc: Book | null, book: Book) => {
-  //       if (!acc) return book;
-  //       return book.edicao.paginas < acc.edicao.paginas ? book : acc;
-  //     }, null);
+      const smallestBook = readBooksInThisMonth.reduce((acc: Book | null, book: Book) => {
+        if (!acc) return book;
+        return book.edicao.paginas < acc.edicao.paginas ? book : acc;
+      }, null);
 
-  //     const highestRating = readBooksInThisMonth.reduce((acc: Book | null, book: Book) => {
-  //       if (book.ranking === 0) return acc;
-  //       if (!acc) return book;
-  //       return book.ranking > acc.ranking ? book : acc;
-  //     }, null);
+      const highestRating = readBooksInThisMonth.reduce((acc: Book | null, book: Book) => {
+        if (book.ranking === 0) return acc;
+        if (!acc) return book;
+        return book.ranking > acc.ranking ? book : acc;
+      }, null);
 
-  //     const lowestRating = readBooksInThisMonth.reduce((acc: Book | null, book: Book) => {
-  //       if (book.ranking === 0) return acc;
-  //       if (!acc) return book;
-  //       return book.ranking < acc.ranking ? book : acc;
-  //     }, null);
+      const lowestRating = readBooksInThisMonth.reduce((acc: Book | null, book: Book) => {
+        if (book.ranking === 0) return acc;
+        if (!acc) return book;
+        return book.ranking < acc.ranking ? book : acc;
+      }, null);
 
-  //     setBookStats({
-  //       biggest: biggestBook,
-  //       smallest: smallestBook,
-  //       highestRating,
-  //       lowestRating,
-  //     });
+      setBookStats({
+        biggest: biggestBook,
+        smallest: smallestBook,
+        highestRating,
+        lowestRating,
+      });
 
-  //   } catch (error) {
-  //     console.error(error);
-  //     setError(true);
-  //     setErrorMessage(error instanceof Error ? error.message : "Erro ao buscar livros do usuário");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }
+    } catch (error) {
+      console.error(error);
+      setError(true);
+      setErrorMessage(error instanceof Error ? error.message : "Erro ao buscar livros do usuário");
+    } finally {
+      setLoading(false);
+    }
+  }
 
-  // const htmlToImageConvert = () => {
-  //   const node = exportRef.current;
+  const htmlToImageConvert = () => {
+    const node = exportRef.current;
 
-  //   if (!node) return;
+    if (!node) return;
 
-  //   const images = node.querySelectorAll("img");
+    const images = node.querySelectorAll("img");
 
-  //   const imageLoadPromises = Array.from(images).map((img) => {
-  //     if (img.complete && img.naturalHeight !== 0) return Promise.resolve();
-  //     return new Promise((resolve) => {
-  //       img.onload = () => resolve(null);
-  //       img.onerror = () => resolve(null);
-  //     });
-  //   });
+    const imageLoadPromises = Array.from(images).map((img) => {
+      if (img.complete && img.naturalHeight !== 0) return Promise.resolve();
+      return new Promise((resolve) => {
+        img.onload = () => resolve(null);
+        img.onerror = () => resolve(null);
+      });
+    });
 
-  //   Promise.all(imageLoadPromises).then(() => {
-  //     html2canvas(node, {
-  //       useCORS: true,
-  //       scale: 2,
-  //       width: 1200,
-  //       height: 675,
-  //     }).then((canvas) => {
-  //       const dataUrl = canvas.toDataURL("image/png");
-  //       const link = document.createElement("a");
-  //       link.download = "twitter-recap.png";
-  //       link.href = dataUrl;
-  //       link.click();
-  //     });
-  //   });
-  // };
+    Promise.all(imageLoadPromises).then(() => {
+      html2canvas(node, {
+        useCORS: true,
+        scale: 2,
+        width: 1200,
+        height: 675,
+      }).then((canvas) => {
+        const dataUrl = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.download = "twitter-recap.png";
+        link.href = dataUrl;
+        link.click();
+      });
+    });
+  };
 
-  // function isColorDark(hex: string): boolean {
-  //   const r = parseInt(hex.substr(1, 2), 16);
-  //   const g = parseInt(hex.substr(3, 2), 16);
-  //   const b = parseInt(hex.substr(5, 2), 16);
-  //   const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-  //   return brightness < 128;
-  // }
+  function isColorDark(hex: string): boolean {
+    const r = parseInt(hex.substr(1, 2), 16);
+    const g = parseInt(hex.substr(3, 2), 16);
+    const b = parseInt(hex.substr(5, 2), 16);
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    return brightness < 128;
+  }
 
-  // useEffect(() => {
-  //   const now = new Date();
-  //   now.setUTCMonth(now.getUTCMonth() + selectedMonthOffset);
-  //   const monthName = now.toLocaleString("pt-br", { month: "long" });
-  //   setMonth(monthName);
-  // }, [selectedMonthOffset]);
+  useEffect(() => {
+    const now = new Date();
+    now.setUTCMonth(now.getUTCMonth() + selectedMonthOffset);
+    const monthName = now.toLocaleString("pt-br", { month: "long" });
+    setMonth(monthName);
+  }, [selectedMonthOffset]);
 
-  // useEffect(() => {
-  //   const { id } = validateSearch(search);
+  useEffect(() => {
+    const { id } = validateSearch(search);
 
-  //   if (id) {
-  //     handleSubmit();
-  //   }
-  // }, [selectedMonthOffset]);
+    if (id) {
+      handleSubmit();
+    }
+  }, [selectedMonthOffset]);
 
-  // useEffect(() => {
-  //   if (search === "") {
-  //     setInputPosition("top");
-  //     setShowBookStats(false);
-  //     setError(false);
-  //     setErrorMessage("");
-  //     setBookStats({
-  //       biggest: null,
-  //       smallest: null,
-  //       highestRating: null,
-  //       lowestRating: null,
-  //     });
-  //   } else if (error) {
-  //     setInputPosition("top");
-  //     setShowBookStats(false);
-  //   }
-  // }, [error, search]);
+  useEffect(() => {
+    if (search === "") {
+      setInputPosition("top");
+      setShowBookStats(false);
+      setError(false);
+      setErrorMessage("");
+      setBookStats({
+        biggest: null,
+        smallest: null,
+        highestRating: null,
+        lowestRating: null,
+      });
+    } else if (error) {
+      setInputPosition("top");
+      setShowBookStats(false);
+    }
+  }, [error, search]);
 
-  // useEffect(() => {
-  //   if (hasAnyBookStats) {
-  //     setInputPosition("center");
-  //     setShowBookStats(true);
-  //   }
-  // }, [bookStats]);
+  useEffect(() => {
+    if (hasAnyBookStats) {
+      setInputPosition("center");
+      setShowBookStats(true);
+    }
+  }, [bookStats]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText('00020126580014BR.GOV.BCB.PIX0136c0914b66-8219-48e5-ad8b-c60aca654cb55204000053039865802BR5922Jasmine Germano Franca6009SAO PAULO62140510xm3wekMtUM6304254B');
@@ -245,7 +245,7 @@ export default function Home() {
           <h1 className="text-2xl">lidos no mês de</h1>
           <h2 className="text-4xl text-center font-medium -mt-5 mb-5 flex items-center gap-1"><span className="text-xl">‧₊˚📚✩</span>{month}<span className="text-xl">✩📚˚₊‧</span></h2>
           <h3>O skoob passou por algumas mudanças e, por isso, o rebook não está funcionando no momento :(</h3>
-          {/* <div className="flex gap-2 mb-2">
+          <div className="flex gap-2 mb-2">
             <button
               onClick={() => setSelectedMonthOffset(0)}
               className={`px-3 py-1 rounded-full text-sm ${selectedMonthOffset === 0 ? 'bg-secondary text-white' : 'bg-gray-200'}`}
@@ -420,8 +420,7 @@ export default function Home() {
               </button>
             </div>
           </> 
-        )}*/}
-        </div>
+        )}
       </div>
       <footer className="w-full max-w-6xl mt-10 text-center text-xs flex flex-col items-center gap-2 sm:text-sm text-gray-500">
         <div className="relative">
