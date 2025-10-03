@@ -46,19 +46,19 @@ export default function Home() {
 
   async function handleSubmit(e?: React.FormEvent) {
     if (e) e.preventDefault();
-  
+
     setError(false);
     setErrorMessage("");
-  
+
     const { id, validationMessage } = validateSearch(search);
     if (validationMessage) {
       setError(true);
       setErrorMessage(validationMessage);
       return;
     }
-  
+
     if (!id) return;
-  
+
     setLoading(true);
     try {
       const data = await getUserBooks(id);
@@ -67,77 +67,77 @@ export default function Home() {
         setErrorMessage("Erro ao buscar livros do usuário");
         return;
       }
-  
+
       if (data.response.length === 0) {
         setError(true);
         setErrorMessage("Nenhum livro encontrado");
         return;
       }
-  
+
       const now = new Date();
       now.setUTCMonth(now.getUTCMonth() + selectedMonthOffset);
-  
+
       const readBooksInThisMonth = data.response.filter((book: { tipo: number, dt_leitura: string }) => {
         if (!book.dt_leitura) return false;
-  
+
         const rawDate = book.dt_leitura.trim();
         const [datePart] = rawDate.split(" ");
         const [year, month, day] = datePart.split("-");
-  
+
         if (!day || !month || !year) {
           console.warn("Data inválida encontrada:", book.dt_leitura);
           return false;
         }
-  
+
         const bookDate = new Date(Date.UTC(
           parseInt(year),
           parseInt(month) - 1,
           parseInt(day)
         ));
-  
+
         return (
           book.tipo === 1 &&
           bookDate.getUTCMonth() === now.getUTCMonth() &&
           bookDate.getUTCFullYear() === now.getUTCFullYear()
         );
       });
-  
+
       setReadBooksInThisMonth(readBooksInThisMonth);
       if (readBooksInThisMonth.length === 0) {
         setError(true);
         setErrorMessage("Nenhum livro lido neste mês");
         return;
       }
-  
+
       const biggestBook = readBooksInThisMonth.reduce((acc: Book | null, book: Book) => {
         if (!acc) return book;
         return book.edicao.paginas > acc.edicao.paginas ? book : acc;
       }, null);
-  
+
       const smallestBook = readBooksInThisMonth.reduce((acc: Book | null, book: Book) => {
         if (!acc) return book;
         return book.edicao.paginas < acc.edicao.paginas ? book : acc;
       }, null);
-  
+
       const highestRating = readBooksInThisMonth.reduce((acc: Book | null, book: Book) => {
         if (book.ranking === 0) return acc;
         if (!acc) return book;
         return book.ranking > acc.ranking ? book : acc;
       }, null);
-  
+
       const lowestRating = readBooksInThisMonth.reduce((acc: Book | null, book: Book) => {
         if (book.ranking === 0) return acc;
         if (!acc) return book;
         return book.ranking < acc.ranking ? book : acc;
       }, null);
-  
+
       setBookStats({
         biggest: biggestBook,
         smallest: smallestBook,
         highestRating,
         lowestRating,
       });
-  
+
     } catch (error) {
       console.error(error);
       setError(true);
@@ -145,7 +145,7 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
-  }  
+  }
 
   const htmlToImageConvert = () => {
     const node = exportRef.current;
@@ -195,11 +195,11 @@ export default function Home() {
 
   useEffect(() => {
     const { id } = validateSearch(search);
-    
+
     if (id) {
       handleSubmit();
     }
-  }, [selectedMonthOffset]);  
+  }, [selectedMonthOffset]);
 
   useEffect(() => {
     if (search === "") {
@@ -244,7 +244,8 @@ export default function Home() {
           <Image src={Logo} alt="Logo" className="w-20 sm:w-28" />
           <h1 className="text-2xl">lidos no mês de</h1>
           <h2 className="text-4xl text-center font-medium -mt-5 mb-5 flex items-center gap-1"><span className="text-xl">‧₊˚📚✩</span>{month}<span className="text-xl">✩📚˚₊‧</span></h2>
-          <div className="flex gap-2 mb-2">
+          <h3>O skoob passou por algumas mudanças e, por isso, o rebook não está funcionando no momento :(</h3>
+          {/* <div className="flex gap-2 mb-2">
             <button
               onClick={() => setSelectedMonthOffset(0)}
               className={`px-3 py-1 rounded-full text-sm ${selectedMonthOffset === 0 ? 'bg-secondary text-white' : 'bg-gray-200'}`}
@@ -418,8 +419,9 @@ export default function Home() {
                 <span className="text-xs">Compartilhar no Twitter</span>
               </button>
             </div>
-          </>
-        )}
+          </> 
+        )}*/}
+        </div>
       </div>
       <footer className="w-full max-w-6xl mt-10 text-center text-xs flex flex-col items-center gap-2 sm:text-sm text-gray-500">
         <div className="relative">
@@ -432,7 +434,7 @@ export default function Home() {
             ) : (
               <span>💌 Compre um café pra gente</span>
             )}
-            
+
           </button>
         </div>
         <p>um site <span className="font-semibold">BeMine</span> | feito com 💜 por <a href="https://www.linkedin.com/in/jasmgermano/" target="_blank" rel="noopener noreferrer" className="text-[#8D65C5] font-semibold">jasmine ⭐</a> e <a href="https://www.linkedin.com/in/isabelle-sgrignero/" target="_blank" rel="noopener noreferrer" className="text-[#8D65C5] font-semibold">isabelle 🐝</a></p>
